@@ -1,0 +1,320 @@
+
+<html>
+	<head>
+	<title>ThreeTest</title>
+	
+	</head>
+	<body >
+	 	<canvas id="mainCavas" width="400px" height="400px"></canvas>
+	 	<canvas id="mainCavas2" width="400px" height="400px"></canvas>
+	 	<canvas id="mainCavas3" width="400px" height="400px"></canvas>
+	 	<canvas id="mainCavas4" width="400px" height="400px"></canvas>
+	 	<canvas id="mainCavas5" width="400px" height="400px"></canvas>
+	 	<canvas id="mainCavas6" width="400px" height="400px"></canvas>
+	 	<canvas id="mainCavas7" width="400px" height="400px"></canvas>
+<!-- readerer camera scene 三部分 -->
+	<script type="text/javascript" src="js/three.js"></script>
+	<script type="text/javascript" src="js/stats.min.js"></script>
+	<script type="text/javascript">
+	//跨浏览器浏览
+		var EventUtil = {
+		    addHandler:function(elem,type,handler){
+		        if(elem.addEventListener)
+		        {
+		            elem.addEventListener(type,handler,false);
+		        }else if(elem.attachEvent)
+		        {
+		            elem.attachEvent("on"+type,handler);
+		        }else
+		        {
+		            elem["on"+type]=handler;
+		        }
+		    },
+		    removeHandler:function(elem,type,handler){
+		        if(elem.removeEventListener)
+		        {
+		            elem.removeEventListener(type,handler,false);
+		        }else if(elem.detachEvent)
+		        {
+		            elem.detachEvent("on"+type,handler);
+		        }else
+		        {
+		            elem["on"+type]=null;
+		        }
+		    },
+		    getEvent:function(event){
+		        return event?event:window.event;
+		    },
+		    getTarget:function(event){
+		        return event.target||event.srcElement;
+		    },
+		    preventDefault:function(event){
+		        if(event,preventDefault){
+		            event.preventDefault();
+		        }else{
+		            event.returnValue = false;
+		        }
+		    },
+		    stopPropagation:function(event){
+		        if(event.stopPropagation){
+		            event.stopPropagation();
+		        }else{
+		            event.cancelBubble=true;
+		        }
+		    }
+		    
+		};
+	
+	var stat;
+		init();
+		
+		
+		function init(){
+			creatStat();
+			//1
+			var renderer= new THREE.WebGLRenderer(
+				{canvas:document.getElementById("mainCavas")}
+			);
+			renderer.setClearColor(0x000000);
+			var scene = new THREE.Scene();
+			
+			var camera=new THREE.PerspectiveCamera(45,4/3,1,1000);
+			
+			camera.position.set(0,0,5);
+			
+			scene.add(camera);
+			
+			var cube= new THREE.Mesh(new THREE.CubeGeometry(1,2,3),
+					  new THREE.MeshBasicMaterial({
+						  color:0xff0000
+					  }));
+			scene.add(cube);
+			renderer.render(scene,camera);
+			//2
+			var renderer2= new THREE.WebGLRenderer(
+					{canvas:document.getElementById("mainCavas2")}
+				);
+				renderer2.setClearColor(0x000000);
+				var scene2 = new THREE.Scene();
+			var camera2=new THREE.OrthographicCamera(-2, 2, 2, -2, 1, 10);
+			
+			 camera2.position.set(4,-5,5);
+			 camera2.lookAt(new THREE.Vector3(0,0,0));
+			scene2.add(camera2);
+			
+			var cube2 =new THREE.Mesh(new THREE.CubeGeometry(1,1,1),
+						new THREE.MeshBasicMaterial({
+							color:0xff0000,
+							wireframe:true
+						}));
+			scene2.add(cube2);
+			renderer2.render(scene2,camera2);
+			//3
+			var renderer2= new THREE.WebGLRenderer(
+					{canvas:document.getElementById("mainCavas3")}
+				);
+				renderer2.setClearColor(0x000000);
+				var scene2 = new THREE.Scene();
+			var camera2=new THREE.PerspectiveCamera(45,400/200,1,6);
+			
+			 camera2.position.set(0,0,5);
+			 camera2.lookAt(new THREE.Vector3(0,0,0));
+			scene2.add(camera2);
+			//创建的正方形以原点为几何中心
+			var cube2 =new THREE.Mesh(new THREE.CubeGeometry(2,2,2),
+						new THREE.MeshBasicMaterial({
+							color:0xff0000,
+							wireframe:true
+						}));
+			scene2.add(cube2);
+			renderer2.render(scene2,camera2);
+			//4
+			var renderer =new THREE.WebGLRenderer(
+					{canvas:document.getElementById("mainCavas4")}
+			);
+			renderer.setClearColor(0x000000);
+			var scene=new THREE.Scene();
+			var camera=new THREE.PerspectiveCamera(60,400/400,1,20);
+			camera.position.set(0,20,0);
+			camera.lookAt(new THREE.Vector3(0,0,0));
+			scene.add(camera);
+			var x=0;
+			//环境光源
+			//var light = new THREE.AmbientLight(0xffffff);
+			
+			//点光源
+			var light = new THREE.PointLight(0xffffff, 2, 100);
+				light.position.set(0, 10, 0);
+				scene.add(light);
+			var cycle=new THREE.Mesh(new THREE.SphereGeometry(2,50,50),
+					new THREE.MeshLambertMaterial({
+						color: 0xffff00,
+						emissive: 0xff0000
+							//wireframe:true
+						}));
+			cycle.position.set(6,0,0);
+			scene.add(cycle);
+			id=setInterval(function(){
+				stat.begin();
+				x=x+0.01;
+				cycle.rotation.y = (cycle.rotation.y + 0.01) % (Math.PI * 2);
+				cycle.position.x=6*(Math.cos(x));
+				cycle.position.z=6*(Math.sin(x));
+				renderer.render(scene, camera);
+				stat.end();
+			}, 20);
+			//5
+			var renderer5 =new THREE.WebGLRenderer(
+					{canvas:document.getElementById("mainCavas5")}
+			);
+			renderer5.setClearColor(0x000000);
+			var scene5=new THREE.Scene();
+			var camera5=new THREE.PerspectiveCamera(60,400/400,1,20);
+			camera5.position.set(0,20,0);
+			camera5.lookAt(new THREE.Vector3(0,0,0));
+			scene5.add(camera5);
+			
+			var cube5=new THREE.Mesh(new THREE.CubeGeometry(2,2,5),
+						new THREE.MeshBasicMaterial({
+							color:0xff0000,
+							//wireframe:true
+						}));
+			cube5.position.set(6,0,0);
+			scene5.add(cube5);
+			id=setInterval(function(){
+				cube5.rotation.y = (cube5.rotation.y + 0.01) % (Math.PI * 2);
+				renderer5.render(scene5, camera5);
+			}, 20);
+			
+			//6
+			var renderer6 =new THREE.WebGLRenderer(
+					{canvas:document.getElementById("mainCavas6")}
+			);
+			renderer6.setClearColor(0xd9d9d9);
+			var scene6=new THREE.Scene();
+			var camera6=new THREE.PerspectiveCamera(60,400/400,1,40);
+			camera6.position.set(0,0,30);
+			camera6.lookAt(new THREE.Vector3(0,0,0));
+			scene6.add(camera6);
+			
+			//环境光源
+			//var light = new THREE.AmbientLight(0xffffff);
+			
+			//点光源
+			var light6 = new THREE.PointLight(0xffffff, 2, 100);
+				light6.position.set(0, 10, 0);
+				scene6.add(light6);
+			var cycle6=new THREE.Mesh(new THREE.SphereGeometry(2,50,50),
+					new THREE.MeshLambertMaterial({
+						color: 0xffff00,
+						emissive: 0xff0000
+							//wireframe:true
+						}));
+			var cub_rec=new THREE.Mesh(new THREE.CubeGeometry(20, 20, 0.1),
+							new THREE.MeshLambertMaterial({
+								color:0x00ffff,
+								
+							}) 
+			);
+			cub_rec.position.set(0,-10,0);
+			cub_rec.rotation.x=Math.PI*0.5;
+			scene6.add(cub_rec);
+			cycle6.position.set(6,0,0);
+			scene6.add(cycle6);
+			var angle6=0;
+			var move_y=0;
+			var move_c=true;
+			var move_speed=0.3;
+			id=setInterval(function(){
+				
+				angle6=angle6+0.01;
+				//绕球体自己的y轴旋转
+				cycle6.rotation.y = (cycle6.rotation.y + 0.01) % (Math.PI * 2);
+				cycle6.position.x=6*(Math.cos(angle6));
+				cycle6.position.z=6*(Math.sin(angle6));
+				if(move_y>-9 && move_c){
+					move_y=move_y-move_speed;
+				}else{
+					move_y=move_y+move_speed;
+					
+					if(move_y >= 0){//js小数不精确
+						move_c=true;
+					}
+					else{
+						move_c=false;
+					}	
+				}	
+				cycle6.position.y=move_y;
+				renderer6.render(scene6, camera6);
+			
+			}, 20);
+			
+			//7
+			//获得鼠标的点击坐标
+			var renderer7= new THREE.WebGLRenderer(
+					{canvas:document.getElementById("mainCavas7")}
+				);
+				renderer7.setClearColor(0x000000);
+				var scene7 = new THREE.Scene();
+				
+				var camera7=new THREE.PerspectiveCamera(45,4/4,1,1000);
+				
+				camera7.position.set(0,0,30);
+				camera7.lookAt(new THREE.Vector3(0,0,0));
+				scene7.add(camera7);
+				var cycle7=new THREE.Mesh(new THREE.SphereGeometry(2,50,50),
+						new THREE.MeshLambertMaterial({
+							color: 0xffff00,
+							emissive: 0xff0000}));
+				cycle7.position.set(0,0,0);
+				scene7.add(cycle7);
+				renderer7.render(scene7,camera7);
+				mouseDown(cycle7,"mainCavas7",camera7,scene7);
+				
+		};
+		
+		//创建帧数查看器
+		function creatStat(){
+			stat = new Stats();
+			stat.domElement.style.position = 'absolute';
+			stat.domElement.style.right = '0px';
+			stat.domElement.style.top = '0px';
+			document.body.appendChild(stat.domElement);
+		};
+		
+	 	//鼠标点击事件
+	 	function mouseDown(obj,cavas,camera,scene){
+	 		var myCanvas=document.getElementById(cavas);
+	 		EventUtil.addHandler(myCanvas,"click",function(){
+	 			 event = EventUtil.getEvent(event);
+	 			 console.log("----------------------------------------------------------------");
+	 			 //屏幕坐标
+	 			console.log("screen coordinates"+event.screenX+","+event.screenY);
+	 			 //视口坐标
+	 			console.log("client coordinates"+event.clientX+","+event.clientY);
+	 			//页面坐标
+	 			console.log("page coordinates"+ event.pageX+","+event.pageY);
+	 			//页面坐标
+	 			console.log("page coordinates"+ (event.clientX+document.body.scrollLeft||document.documentElement.srollLeft)+
+	 						","+(event.clientY+document.body.scrollTop||document.documentElement.scrollTop));
+	 			//对象的页面坐标
+	 			//console.log("page coordinates of object "+ obj.pageX||"undefine2"+ "," +obj.pageY||"undefine2");
+	 			console.log("window.innerWidth:"+window.innerWidth);
+	 			console.log("window.innerHeight:"+window.innerHeight);
+	 			
+	 			var vector=convertTo3DCoordinate(event.clientX, event.clientY,camera);
+	 			console.log("threejs vector:"+vector.x+","+vector.y+","+vector.z);
+	 		});
+	 	};
+	 	//转换成JS三维坐标，不考虑z坐标大小
+	 	function  convertTo3DCoordinate(clientX,clientY,camera){
+	        var mv = new THREE.Vector3(
+	            (clientX / window.innerWidth) * 2 - 1,
+	            -(clientY / window.innerHeight) * 2 + 1,
+	            0.5 );
+	        mv.unproject(camera);   //这句将一个向量转成threejs坐标
+	        return mv;
+	    }
+	</script>
+	</body>
+</html>
